@@ -3,6 +3,8 @@ from django.template.response import TemplateResponse
 from django.utils import timezone
 from django.views import View
 
+from .models import Todo
+
 
 # Step 1. はじめての画面表示
 # def todo_list(request):
@@ -32,11 +34,23 @@ from django.views import View
 #         """.format(today))
 
 
-# Step 4. テンプレートを使う
+# # Step 4. テンプレートを使う
+# class TodoListView(View):
+#     def get(self, request, *args, **kwargs):
+#         today = timezone.localdate()
+#         context = {
+#             'today': today,
+#         }
+#         return TemplateResponse(request, 'todo/todo_list.html', context)
+
+
+# Step 5. モデルを使う
 class TodoListView(View):
     def get(self, request, *args, **kwargs):
         today = timezone.localdate()
+        todo_list = Todo.objects.order_by('expiration_date')
         context = {
             'today': today,
+            'todo_list': todo_list,
         }
         return TemplateResponse(request, 'todo/todo_list.html', context)
